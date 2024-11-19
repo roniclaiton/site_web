@@ -1,0 +1,28 @@
+#Auteur: Roni Claiton Vilhena Silva
+#Date de création: 19/11/2024
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <title>Liste des Entreprises</title>
+    </head>
+    <body>
+        <h1>Liste des Entreprises</h1>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Secteur</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entreprise in entreprises %}
+                    <tr>
+                        <td>{{ entreprise['nom'] }}</td>
+                        <td>{{ entreprise['secteur'] }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </body>
+</html>

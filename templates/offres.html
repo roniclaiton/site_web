@@ -1,0 +1,28 @@
+#Auteur: Roni Claiton Vilhena Silva
+#Date de création: 19/11/2024
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <title>Liste des Offres d'Emploi</title>
+    </head>
+    <body>
+        <h1>Liste des Offres d'Emploi</h1>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Titre</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for offre in offres %}
+                    <tr>
+                        <td>{{ offre['titre'] }}</td>
+                        <td>{{ offre['description'] }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </body>
+</html>
