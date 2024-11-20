@@ -1,14 +1,18 @@
-<?php
-$db = new SQLite3('emploi.db');
+import sqlite3
 
-// Créer la table si elle n'existe pas
-$query = "CREATE TABLE IF NOT EXISTS utilisateurs (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    nom TEXT NOT NULL,
-    prenom TEXT NOT NULL,
-    telephone TEXT NOT NULL
-)";
+# Connexion à la base de données
+conn = sqlite3.connect('db/emploi.db')
+cursor = conn.cursor()
 
-$db->exec($query);
-echo "Table créée avec succès!";
-?>
+# Création du tableau departement
+cursor.execute('''
+CREATE TABLE IF NOT EXISTS departement (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  code TEXT NOT NULL UNIQUE,
+  nom TEXT NOT NULL
+)
+''')
+
+# Sauvegarder les changements et fermer la connexion
+conn.commit()
+conn.close()

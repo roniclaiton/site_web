@@ -35,15 +35,29 @@ session_start();
             <li>
                 <!-- Formulaire de Recherche -->
                 <form action="php/traitement.php" method="POST" onsubmit="return validateForm()">
+                    <input type="hidden" name="default_department_id" value="12345">
                     <label for="departement">Département (Code Postal):</label>
                     <select id="departement" name="departement" required>
                         <option value="">Sélectionnez un département</option>
-                    </select>
+                        <?php
+    
+    include 'config.php';
+
+    // Récupérer les départements depuis la base de données
+    $db = getDbConnection();
+    $departments = $db->query('SELECT code, nom FROM departement');
+
+    while ($row = $departments->fetchArray(SQLITE3_ASSOC)) {
+        echo '<option value="' . htmlspecialchars($row['code']) . '">' . htmlspecialchars($row['nom']) . '</option>';
+    }
+?>
+</select>
                     <button type="submit">Rechercher</button>
                 </form>
             </li>
             <li>
                 <form action="php/traitement.php" method="POST" onsubmit="return validateForm()">
+                    <input type="hidden" name="default_department_id" value="12345">
                     <label for="ville">Ville :</label>
                     <input type="text" id="ville" name="ville" placeholder="Entrez la ville" required>
                     <button type="submit">Rechercher</button>
@@ -51,7 +65,8 @@ session_start();
             </li>
             <li>
                 <form action="php/traitement.php" method="POST" onsubmit="return validateForm()">
-                    <label for="niveau_etude">Niveau d'étude :</label>
+                    <input type="hidden" name="default_department_id" value="12345">
+                    <label for="niveau_etude">Métier :</label>
                     <input type="text" id="niveau_etude" name="niveau_etude" placeholder="Entrez le niveau d'étude" required>
                     <button type="submit">Rechercher</button>
                 </form>
