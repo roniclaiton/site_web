@@ -1,3 +1,7 @@
+<?php
+// En haut du fichier
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -193,6 +197,71 @@ window.onload = function() {
         showPopup('Une erreur est survenue. Veuillez réessayer.', false);
     }
 }
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const departementSelect = document.getElementById('departement');
+    const villeInput = document.getElementById('ville');
+    const metierInput = document.getElementById('niveau_etude'); // Vous pourriez renommer cet ID en 'metier'
+
+    // Quand un département est sélectionné
+    departementSelect.addEventListener('change', function() {
+        const departement = this.value;
+        if (departement) {
+            // Appel AJAX pour récupérer les villes
+            fetch('search.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `action=getVilles&departement=${departement}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Activer le champ ville
+                    villeInput.disabled = false;
+                    // Créer une liste de suggestions pour l'autocomplétion
+                    const datalist = document.createElement('datalist');
+                    datalist.id = 'villes-list';
+                    data.villes.forEach(ville => {
+                        const option = document.createElement('option');
+                        option.value = ville.ville;
+                        datalist.appendChild(option);
+                    });
+                    // Remplacer l'ancienne datalist si elle existe
+                    const oldDatalist = document.getElementById('villes-list');
+                    if (oldDatalist) oldDatalist.remove();
+                    document.body.appendChild(datalist);
+                    villeInput.setAttribute('list', 'villes-list');
+                }
+            });
+        }
+    });
+
+    // Quand une ville est sélectionnée
+    villeInput.addEventListener('change', function() {
+        const ville = this.value;
+        if (ville) {
+            // Appel AJAX pour récupérer les métiers
+            fetch('search.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `action=getMetiers&ville=${ville}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Activer le champ métier
+                    metierInput.disabled = false;
+                    // Même logique pour les métiers...
+                }
+            });
+        }
+    });
+});
 </script>
 </body>
 </html>
