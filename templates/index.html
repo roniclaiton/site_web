@@ -145,12 +145,54 @@
         <p>&copy; 2024 JeJob.fr. Tous droits réservés.</p>
     </footer>
 
-    <!-- Pop-up overlay -->
-    <div id="popup-overlay" class="popup-overlay">
-        <div class="popup">
-            <div id="popup-message"></div>
-            <button class="popup-close" onclick="closePopup()">Fermer</button>
-        </div>
+    <!-- Pop-up de message -->
+<div id="popup-overlay" class="popup-overlay">
+    <div class="popup">
+        <div id="popup-message"></div>
+        <button class="popup-close" onclick="closePopup()">Fermer</button>
     </div>
+</div>
+
+<!-- Script modifié -->
+<script>
+function validateForm() {
+    var tel = document.getElementById('telephone').value;
+    var telPattern = /^[0-9]{2}\.[0-9]{2}\.[0-9]{2}\.[0-9]{2}\.[0-9]{2}$/;
+    
+    if (!telPattern.test(tel)) {
+        alert("Le numéro de téléphone doit être au format XX.XX.XX.XX.XX");
+        return false;
+    }
+    return true;
+}
+
+function showPopup(message, isSuccess) {
+    const popup = document.getElementById('popup-overlay');
+    const messageDiv = document.getElementById('popup-message');
+    
+    messageDiv.innerHTML = message;
+    messageDiv.className = isSuccess ? 'popup-success' : 'popup-error';
+    popup.style.display = 'block';
+}
+
+function closePopup() {
+    document.getElementById('popup-overlay').style.display = 'none';
+    // Si c'est un succès, on peut rafraîchir la page ou rediriger
+    if (document.getElementById('popup-message').classList.contains('popup-success')) {
+        window.location.href = 'index.html';
+    }
+}
+
+window.onload = function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const status = urlParams.get('status');
+    
+    if (status === 'success') {
+        showPopup('Merci ! Vos informations ont été enregistrées avec succès.', true);
+    } else if (status === 'error') {
+        showPopup('Une erreur est survenue. Veuillez réessayer.', false);
+    }
+}
+</script>
 </body>
 </html>

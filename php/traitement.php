@@ -24,15 +24,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $result = $stmt->execute();
         
         if ($result) {
-            header("Location: index.html?status=success#message");
+            header("Location: index.html?status=success");
             exit();
         } else {
-            header("Location: index.html?status=error#message");
+            header("Location: index.html?status=error");
             exit();
         }
         
     } catch (Exception $e) {
-        header("Location: index.html?status=error#message");
+        header("Location: index.html?status=error");
         exit();
     } finally {
         $db->close();
