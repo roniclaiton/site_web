@@ -1,0 +1,103 @@
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #3498db;
+    --background-color: #f5f6fa;
+    --text-color: #2c3e50;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--background-color);
+    margin: 0;
+    padding: 20px;
+    color: var(--text-color);
+}
+
+.search-container {
+    max-width: 800px;
+    margin: 40px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+}
+
+.search-title {
+    text-align: center;
+    color: var(--primary-color);
+    margin-bottom: 30px;
+    font-size: 24px;
+}
+
+.search-box {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+#searchInput {
+    width: 100%;
+    padding: 15px 20px; /* Conserver le padding de l'ancien fichier */
+    font-size: 16px;
+    border: 2px solid var(--secondary-color); /* Utiliser la couleur secondaire */
+    border-radius: 8px; /* Conserver le border-radius de l'ancien fichier */
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+#searchInput:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 5px rgba(231, 76, 60, 0.5);
+}
+
+#results {
+    margin-top: 20px;
+}
+
+.dept-row {
+    cursor: pointer;
+    padding: 10px; /* Conserver le padding de l'ancien fichier */
+    border-bottom: 1px solid #e0e0e0;
+    transition: background-color 0.3s;
+}
+
+.dept-row:hover {
+    background-color: rgba(231, 76, 60, 0.1); /* Light Red on Hover */
+}
+
+.selected-row {
+    background-color: rgba(46, 204, 113, 0.3) !important; /* Light Transparent Green */
+}
+
+#selectedDept {
+    margin-top: 20px;
+    padding: 15px; /* Conserver le padding de l'ancien fichier */
+    background-color: rgba(46, 204, 113, 0.2); /* Light Transparent Green */
+    border-radius: 8px;
+    display: none;
+    font-weight: bold; /* Conserver le poids de police de l'ancien fichier */
+    color: var(--text-color);
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .search-container {
+        padding: 15px;
+        margin: 20px auto;
+    }
+
+    #searchInput {
+        padding: 10px 15px; /* Ajuster le padding pour mobile */
+    }
+
+    th, td {
+        padding: 8px 10px; /* Ajuster le padding pour mobile */
+        font-size: 14px; /* Ajuster la taille de police pour mobile */
+    }
+}
+.search-title {
+    background-color: rgba(46, 204, 113, 0.2); /* Vert transparent */
+    padding: 10px; /* Ajoutez un padding pour l'espacement */
+    border-radius: 8px; /* Arrondir les coins */
+    text-align: center; /* Centrer le texte */
+}
