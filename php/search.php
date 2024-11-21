@@ -3,19 +3,11 @@
 header('Content-Type: application/json');
 
 // Connexion à la base de données
-try {
-    $pdo = new PDO(
-        "mysql:host=localhost;dbname=jejob;charset=utf8",
-        "votre_utilisateur",
-        "votre_mot_de_passe",
-        [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-        ]
-    );
-} catch(PDOException $e) {
-    die(json_encode(['error' => 'Connexion échouée : ' . $e->getMessage()]));
-}
+   try {
+       $db = new SQLite3(__DIR__ . '/../db/emploi.db');
+   } catch (Exception $e) {
+       die(json_encode(['error' => 'Connexion échouée : ' . $e->getMessage()]));
+   }
 
 // Fonction pour nettoyer les entrées
 function cleanInput($data) {

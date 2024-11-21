@@ -39,18 +39,6 @@ session_start();
                     <label for="departement">Département (Code Postal):</label>
                     <select id="departement" name="departement" required>
                         <option value="">Sélectionnez un département</option>
-                        <?php
-                        // Inclure le fichier de configuration pour la connexion à la base de données
-                        include 'includes/config.php';
-
-                        // Récupérer les départements depuis la base de données
-                        $db = getDbConnection();
-                        $departments = $db->query('SELECT code, nom FROM departement');
-
-                        while ($row = $departments->fetchArray(SQLITE3_ASSOC)) {
-                            echo '<option value="' . htmlspecialchars($row['code']) . '">' . htmlspecialchars($row['nom']) . '</option>';
-                        }   
-                        ?>
                     </select>
                     <button type="submit">Rechercher</button>
                 </form>
