@@ -1,6 +1,27 @@
 <?php
-// En haut du fichier
+// Démarrage de la session
 session_start();
+
+// Connexion à la base de données SQLite
+try {
+    $db = new PDO('sqlite:C:/xampp/htdocs/site_web/db/database.sqlite');
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch(PDOException $e) {
+    die("Erreur de connexion : " . $e->getMessage());
+}
+
+// Fonction pour récupérer les départements
+function getDepartements($db) {
+    try {
+        $stmt = $db->query('SELECT * FROM departement ORDER BY code_departement');
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch(PDOException $e) {
+        return [];
+    }
+}
+
+// Récupération des départements pour le select
+$departements = getDepartements($db);
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -39,6 +60,11 @@ session_start();
                     <label for="departement">Département (Code Postal):</label>
                     <select id="departement" name="departement" required>
                         <option value="">Sélectionnez un département</option>
+                        <?php foreach($departements as $departement): ?>
+                            <option value="<?php echo htmlspecialchars($departement['code_departement']); ?>">
+                                <?php echo htmlspecialchars($departement['nom_departement']); ?>
+                            </option>
+                        <?php endforeach; ?>
                     </select>
                     <button type="submit">Rechercher</button>
                 </form>
@@ -47,7 +73,8 @@ session_start();
                 <form action="php/traitement.php" method="POST" onsubmit="return validateForm()">
                     <input type="hidden" name="default_department_id" value="12345">
                     <label for="ville">Ville :</label>
-                    <input type="text" id="ville" name="ville" placeholder="Entrez la ville" required>
+                    <input type="text" id="ville" name="ville" placeholder="Entrez la ville" required disabled>
+                    <datalist id="villes-list"></datalist>
                     <button type="submit">Rechercher</button>
                 </form>
             </li>
@@ -55,7 +82,8 @@ session_start();
                 <form action="php/traitement.php" method="POST" onsubmit="return validateForm()">
                     <input type="hidden" name="default_department_id" value="12345">
                     <label for="niveau_etude">Métier :</label>
-                    <input type="text" id="niveau_etude" name="niveau_etude" placeholder="Entrez le niveau d'étude" required>
+                    <input type="text" id="metier" name="metier" placeholder="Entrez le métier" required disabled>
+                    <datalist id="metiers-list"></datalist>
                     <button type="submit">Rechercher</button>
                 </form>
             </li>
@@ -203,68 +231,58 @@ window.onload = function() {
 </script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const departementSelect = document.getElementById('departement');
-    const villeInput = document.getElementById('ville');
-    const metierInput = document.getElementById('niveau_etude'); // Vous pourriez renommer cet ID en 'metier'
+        const departementSelect = document.getElementById('departement');
+        const villeInput = document.getElementById('ville');
+        const metierInput = document.getElementById('metier');
 
-    // Quand un département est sélectionné
-    departementSelect.addEventListener('change', function() {
-        const departement = this.value;
-        if (departement) {
-            // Appel AJAX pour récupérer les villes
-            fetch('search.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: `action=getVilles&departement=${departement}`
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Activer le champ ville
+        departementSelect.addEventListener('change', function() {
+            const departement = this.value;
+            if (departement) {
+                fetch('ajax/get_villes.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `departement=${departement}`
+                })
+                .then(response => response.json())
+                .then(data => {
                     villeInput.disabled = false;
-                    // Créer une liste de suggestions pour l'autocomplétion
-                    const datalist = document.createElement('datalist');
-                    datalist.id = 'villes-list';
-                    data.villes.forEach(ville => {
+                    const datalist = document.getElementById('villes-list');
+                    datalist.innerHTML = '';
+                    data.forEach(ville => {
                         const option = document.createElement('option');
-                        option.value = ville.ville;
+                        option.value = ville.nom_ville;
                         datalist.appendChild(option);
                     });
-                    // Remplacer l'ancienne datalist si elle existe
-                    const oldDatalist = document.getElementById('villes-list');
-                    if (oldDatalist) oldDatalist.remove();
-                    document.body.appendChild(datalist);
-                    villeInput.setAttribute('list', 'villes-list');
-                }
-            });
-        }
-    });
+                });
+            }
+        });
 
-    // Quand une ville est sélectionnée
-    villeInput.addEventListener('change', function() {
-        const ville = this.value;
-        if (ville) {
-            // Appel AJAX pour récupérer les métiers
-            fetch('search.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: `action=getMetiers&ville=${ville}`
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Activer le champ métier
+        villeInput.addEventListener('change', function() {
+            const ville = this.value;
+            if (ville) {
+                fetch('ajax/get_metiers.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `ville=${ville}`
+                })
+                .then(response => response.json())
+                .then(data => {
                     metierInput.disabled = false;
-                    // Même logique pour les métiers...
-                }
-            });
-        }
+                    const datalist = document.getElementById('metiers-list');
+                    datalist.innerHTML = '';
+                    data.forEach(metier => {
+                        const option = document.createElement('option');
+                        option.value = metier.nom_metier;
+                        datalist.appendChild(option);
+                    });
+                });
+            }
+        });
     });
-});
 </script>
 </body>
 </html>
