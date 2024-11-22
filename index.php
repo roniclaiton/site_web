@@ -1,4 +1,3 @@
-<!-- index.php -->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -19,12 +18,23 @@
                    autocomplete="off">
             <div id="results"></div>
         </div>
+        <!-- Nouvelle barre de recherche pour les villes -->
+        <div class="search-box" id="citySearchBox" style="display: none;">
+            <input type="text" 
+                   id="citySearchInput" 
+                   placeholder="Rechercher une ville..."
+                   autocomplete="off">
+            <div id="cityResults"></div>
+        </div>
     </div>
 
     <script>
     $(document).ready(function(){
         const searchInput = $('#searchInput');
         const results = $('#results');
+        const citySearchBox = $('#citySearchBox');
+        const citySearchInput = $('#citySearchInput');
+        const cityResults = $('#cityResults');
 
         // Afficher les résultats en fonction de la saisie
         searchInput.on('input', function() {
@@ -35,7 +45,7 @@
                 $.ajax({
                     url: 'search.php',
                     method: 'POST',
-                    data: { query: query },
+                    data: { query: query, type: 'department' },
                     success: function(response) {
                         results.html(response);
                     }
@@ -49,6 +59,26 @@
             const nom = $(this).data('nom');
             searchInput.val(`${code} - ${nom}`);
             results.empty(); // Effacer les résultats après sélection
+            citySearchBox.show(); // Afficher la barre de recherche des villes
+            citySearchInput.data('department-code', code); // Stocker le code du département
+        });
+
+        // Afficher les résultats des villes en fonction de la saisie
+        citySearchInput.on('input', function() {
+            const query = $(this).val().toLowerCase();
+            const departmentCode = $(this).data('department-code');
+            cityResults.empty();
+
+            if (query && departmentCode) {
+                $.ajax({
+                    url: 'search.php',
+                    method: 'POST',
+                    data: { query: query, type: 'city', departmentCode: departmentCode },
+                    success: function(response) {
+                        cityResults.html(response);
+                    }
+                });
+            }
         });
     });
     </script>

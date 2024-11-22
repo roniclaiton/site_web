@@ -101,3 +101,11 @@ body {
     border-radius: 8px; /* Arrondir les coins */
     text-align: center; /* Centrer le texte */
 }
+   /* Ajoutez des styles spécifiques si nécessaire */
+   #citySearchBox {
+       margin-top: 20px;
+   }
+
+   #cityResults {
+       margin-top: 20px;
+   }
