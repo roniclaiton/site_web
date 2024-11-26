@@ -1,1 +1,2 @@
 py/communes.csv filter=lfs diff=lfs merge=lfs -text
+communes.csv filter=lfs diff=lfs merge=lfs -text
